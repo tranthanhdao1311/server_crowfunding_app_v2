@@ -12,7 +12,11 @@ router.get("/campaigns", async (req, res) => {
 });
 
 router.post("/campaigns", async (req, res) => {
-  const data = new Campaigns(req.body);
+  const camp = await Campaigns.find();
+
+  const id = camp.length + 1;
+
+  const data = new Campaigns({ id: id, ...req.body });
   await data.save();
 
   res.json(data);
