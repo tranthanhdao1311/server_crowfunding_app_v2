@@ -38,7 +38,7 @@ const updateRefreshToken = async (id, refreshToken) => {
 router.get("/me", verifyToken, async (req, res) => {
   const user = await Users.findOne({ id: req.userId });
   if (!user) return res.sendStatus(401);
-  res.json(user);
+  return res.json(user);
 });
 
 router.post("/login", async (req, res) => {
@@ -50,7 +50,7 @@ router.post("/login", async (req, res) => {
   const dbPassword = user.password;
   bcrypt.compare(req.body.password, dbPassword, (err, hash) => {
     if (err || !hash) {
-      res.status(403).json({
+      return res.status(403).json({
         statusCode: 403,
         error: {
           message: "Password does not match",
@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
     const tokens = generateTokens(user);
 
     updateRefreshToken(user.id, tokens.refreshToken);
-    res.json(tokens);
+    return res.json(tokens);
   });
 });
 
@@ -75,10 +75,10 @@ router.post("/token", async (req, res) => {
     jwt.verify(refreshToken, "REFRESH_TOKEN_SECRET");
     const tokens = generateTokens(user);
     updateRefreshToken(user.id, tokens.refreshToken);
-    res.json(tokens);
+    return res.json(tokens);
   } catch (err) {
     console.log(err);
-    res.sendStatus(403);
+    return res.sendStatus(403);
   }
 });
 
@@ -90,7 +90,7 @@ router.post("/register", async (req, res) => {
   }
   bcrypt.hash(password, 10, async (err, hash) => {
     if (err) {
-      res.send(err);
+      return res.send(err);
     }
     const l = await Users.find();
 
@@ -105,14 +105,14 @@ router.post("/register", async (req, res) => {
     });
     await newUser.save();
 
-    res.sendStatus(201);
+    return res.sendStatus(201);
   });
 });
 
 router.delete("/logout", verifyToken, async (req, res) => {
   const user = await Users.findOne({ id: req.userId });
   updateRefreshToken(user.id, "");
-  res.sendStatus(204);
+  return res.sendStatus(204);
 });
 
 module.exports = router;
