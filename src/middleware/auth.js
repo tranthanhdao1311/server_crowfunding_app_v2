@@ -16,4 +16,5 @@ const verifyToken = (req, res, next) => {
     return res.sendStatus(403);
   }
 };
+
 module.exports = verifyToken;
