@@ -22,23 +22,19 @@ router.post("/campaigns", async (req, res) => {
   res.json(data);
 });
 
-router.put("/campaigns/:id", async (req, res) => {
+router.get("/campaigns/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const campaign = await Campaigns.findOneAndUpdate(
-      { id: id },
-      { ...req.body },
-      { new: true }
-    );
-
-    if (!campaign) {
+    const data = await Campaigns.findOne({ id: id });
+    if (!data) {
       return res.status(404).json({ error: "Campaign not found" });
     }
 
-    res.json(campaign);
+    res.json(data);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
   }
 });
 
