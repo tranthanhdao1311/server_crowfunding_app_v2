@@ -35,6 +35,7 @@ router.put("/campaigns/:id", async (req, res) => {
 
     // Cập nhật các thuộc tính bài viết từ req.body
     campaign.title = req.body.title;
+    campaign.perk = req.body.perk;
 
     // Lưu bài viết đã chỉnh sửa
     const updatedCampaign = await campaign.save();
