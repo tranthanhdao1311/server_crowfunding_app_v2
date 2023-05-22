@@ -26,23 +26,19 @@ router.put("/campaigns/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Tìm bài viết dựa trên id
-    const campaign = await Campaigns.findById(id);
+    const campaign = await Campaigns.findOneAndUpdate(
+      { id: id },
+      { ...req.body },
+      { new: true }
+    );
 
     if (!campaign) {
-      return res.status(404).json({ message: "Không tìm thấy bài viết" });
+      return res.status(404).json({ error: "Campaign not found" });
     }
 
-    // Cập nhật các thuộc tính bài viết từ req.body
-    campaign.title = req.body.title;
-    campaign.perk = req.body.perk;
-
-    // Lưu bài viết đã chỉnh sửa
-    const updatedCampaign = await campaign.save();
-
-    res.json(updatedCampaign);
+    res.json(campaign);
   } catch (error) {
-    res.status(500).json({ message: "Đã xảy ra lỗi khi chỉnh sửa bài viết" });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
