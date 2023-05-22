@@ -26,11 +26,7 @@ const Campaigns = new mongoose.Schema({
     avtUser: { type: String },
   },
   id: { type: Number },
-  perk: [
-    {
-      type: Object,
-    },
-  ],
+  perk: { type: String },
 });
 
 // Tạo mô hình Project từ Schema đã định nghĩa
