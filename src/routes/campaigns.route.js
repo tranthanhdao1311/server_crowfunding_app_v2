@@ -58,4 +58,21 @@ router.get("/campaigns/:id", async (req, res) => {
   }
 });
 
+router.delete("/campaigns/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const campaign = await Campaigns.findOneAndDelete({ id: id });
+
+    if (!campaign) {
+      return res.status(404).json({ error: "Campaign not found" });
+    }
+
+    res.json({ message: "Campaign deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
 module.exports = router;
