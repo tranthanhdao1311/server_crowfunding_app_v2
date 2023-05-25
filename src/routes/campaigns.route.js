@@ -68,7 +68,7 @@ router.delete("/campaigns/:id", async (req, res) => {
       return res.status(404).json({ error: "Campaign not found" });
     }
 
-    res.json({ message: "Campaign deleted successfully" });
+    res.json({ message: "Xóa chiến dịch thành công!" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
