@@ -28,7 +28,6 @@ const Campaigns = new mongoose.Schema({
   id: { type: Number },
   perk: [
     {
-      id: { type: Number },
       type: Object,
     },
   ],
