@@ -1,6 +1,8 @@
 const express = require("express");
 
 const router = express.Router();
+const paypal = require("@paypal/checkout-server-sdk");
+
 const verifyToken = require("../middleware/auth");
 
 const Campaigns = require("../database/campaigns.model");
@@ -75,4 +77,39 @@ router.delete("/campaigns/:id", async (req, res) => {
   }
 });
 
+// Tạo client PayPal
+const environment = new paypal.core.SandboxEnvironment(
+  "AbsuQWHyF68P2xTioYiXREERj3yxrJzg-9hTUjurNg7ljdN1EB2vklR3T16q9sGAx1O8cLVn8H7GNDgB",
+  "EL-La7f57w2r1jYBOsigwXLsx-620Bb1g8bbZbFm7Y3Iw21MZdpptz-gN3rgJWhSkV2NqUf-dXc8ZpiJ"
+);
+const client = new paypal.core.PayPalHttpClient(environment);
+
+// Route để tạo phiên thanh toán trên backend
+router.post("/create-payment", async (req, res) => {
+  const { amount, currency } = req.body;
+
+  try {
+    const request = new paypal.orders.OrdersCreateRequest();
+    request.prefer("return=representation");
+    request.requestBody({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: currency,
+            value: amount,
+          },
+        },
+      ],
+    });
+
+    const response = await client.execute(request);
+    const orderID = response.result.id;
+
+    res.status(200).json({ orderID: orderID });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 module.exports = router;
