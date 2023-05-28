@@ -78,38 +78,62 @@ router.delete("/campaigns/:id", async (req, res) => {
 });
 
 // Tạo client PayPal
-const environment = new paypal.core.SandboxEnvironment(
-  "AbsuQWHyF68P2xTioYiXREERj3yxrJzg-9hTUjurNg7ljdN1EB2vklR3T16q9sGAx1O8cLVn8H7GNDgB",
-  "EL-La7f57w2r1jYBOsigwXLsx-620Bb1g8bbZbFm7Y3Iw21MZdpptz-gN3rgJWhSkV2NqUf-dXc8ZpiJ"
-);
-const client = new paypal.core.PayPalHttpClient(environment);
 
-// Route để tạo phiên thanh toán trên backend
-router.post("/create-payment", async (req, res) => {
-  const { amount, currency } = req.body;
+// const environment = new paypal.core.SandboxEnvironment(
+//   "AbsuQWHyF68P2xTioYiXREERj3yxrJzg-9hTUjurNg7ljdN1EB2vklR3T16q9sGAx1O8cLVn8H7GNDgB",
+//   "EL-La7f57w2r1jYBOsigwXLsx-620Bb1g8bbZbFm7Y3Iw21MZdpptz-gN3rgJWhSkV2NqUf-dXc8ZpiJ"
+// );
+// const client = new paypal.core.PayPalHttpClient(environment);
 
-  try {
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: currency,
-            value: amount,
-          },
-        },
-      ],
-    });
+// // Route để tạo phiên thanh toán trên backend
+// router.post("/create-payment", async (req, res) => {
+//   const { goal, currency, price } = req.body;
 
-    const response = await client.execute(request);
-    const orderID = response.result.id;
+//   try {
+//     const request = new paypal.orders.OrdersCreateRequest();
+//     request.prefer("return=representation");
+//     request.requestBody({
+//       intent: "CAPTURE",
+//       purchase_units: [
+//         {
+//           amount: {
+//             currency_code: currency,
+//             value: goal,
+//           },
+//         },
+//       ],
+//     });
 
-    res.status(200).json({ orderID: orderID });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+//     const response = await client.execute(request);
+//     const orderID = response.result.id;
+
+//     res.status(200).json({ orderID: orderID });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// });
+
+// // Route để lấy thông tin chi tiết đơn hàng dựa trên Order ID
+// router.get("/order/:orderId", async (req, res) => {
+//   const { orderId } = req.params;
+
+//   try {
+//     // Gọi hàm xử lý để lấy thông tin chi tiết đơn hàng dựa trên Order ID
+//     const orderDetails = await getOrderDetails(orderId);
+
+//     // Trả về thông tin chi tiết đơn hàng cho client
+//     res.json(orderDetails);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// });
+
+// // Hàm xử lý lấy thông tin chi tiết đơn hàng dựa trên Order ID từ PayPal
+// async function getOrderDetails(orderId) {
+//   const request = new paypal.orders.OrdersGetRequest(orderId);
+//   const response = await paypalClient.execute(request);
+//   return response.result;
+// }
 module.exports = router;
