@@ -97,7 +97,7 @@ router.post("/create-payment", async (req, res) => {
       purchase_units: [
         {
           amount: {
-            value: goal || price,
+            value: price,
           },
         },
       ],
