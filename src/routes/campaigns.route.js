@@ -87,32 +87,28 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 // Route để tạo phiên thanh toán trên backend
 router.post("/create-payment", async (req, res) => {
-  const { goal, currency, perk, selectedPerkId } = req.body;
-  // const { goal } = perk;
+  // const { perk } = req.body;
+  const perks = req.body.perk;
 
-  // if (selectedPerkIndex < 0 || selectedPerkIndex >= perk.length) {
-  //   res.status(400).json({ error: "Index của perk không hợp lệ." });
-  //   return;
-  // }
-
-  const selectedPerk = perk.find((item) => item.id === selectedPerkId);
-
-  if (!selectedPerk) {
-    res.status(400).json({ error: "Không tìm thấy perk tương ứng." });
-    return;
+  // Lấy giá tiền dựa trên id
+  const getPriceById = (id) => {
+    const item = data.find((item) => item.id === id);
+    return item ? item.price : null;
+  };
+  const price = getPriceById(id);
+  if (!price) {
+    return res.status(404).json({ error: "Invalid id" });
   }
-
-  const amount = selectedPerk.price;
 
   try {
     const request = new paypal.orders.OrdersCreateRequest();
     request.prefer("return=representation");
     request.requestBody({
-      intent: "CAPTURE",
+      intent: "sandbox",
       purchase_units: [
         {
           amount: {
-            value: amount,
+            value: price,
           },
         },
       ],
