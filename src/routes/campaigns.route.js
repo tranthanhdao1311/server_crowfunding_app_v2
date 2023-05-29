@@ -87,7 +87,16 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 // Route để tạo phiên thanh toán trên backend
 router.post("/create-payment", async (req, res) => {
-  const { goal, currency, price } = req.body;
+  const { goal, currency, perk, selectedPerkIndex } = req.body;
+  // const { goal } = perk;
+
+  // if (selectedPerkIndex < 0 || selectedPerkIndex >= perk.length) {
+  //   res.status(400).json({ error: "Index của perk không hợp lệ." });
+  //   return;
+  // }
+
+  const selectedPerk = perk[selectedPerkIndex];
+  const amount = selectedPerk.price;
 
   try {
     const request = new paypal.orders.OrdersCreateRequest();
@@ -97,16 +106,16 @@ router.post("/create-payment", async (req, res) => {
       purchase_units: [
         {
           amount: {
-            value: price,
+            value: amount,
           },
         },
       ],
     });
 
-    const response = await client.execute(request);
-    const orderID = response.result.id;
+    // const response = await client.execute(request);
+    // const orderID = response.result.id;
 
-    res.status(200).json({ orderID: orderID });
+    res.status(200).json({ amount: amount });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server Error" });
