@@ -87,7 +87,7 @@ const client = new paypal.core.PayPalHttpClient(environment);
 
 // Route để tạo phiên thanh toán trên backend
 router.post("/create-payment", async (req, res) => {
-  const { goal, currency, perk, selectedPerkIndex } = req.body;
+  const { goal, currency, perk, selectedPerkId } = req.body;
   // const { goal } = perk;
 
   // if (selectedPerkIndex < 0 || selectedPerkIndex >= perk.length) {
@@ -95,7 +95,13 @@ router.post("/create-payment", async (req, res) => {
   //   return;
   // }
 
-  const selectedPerk = perk[selectedPerkIndex];
+  const selectedPerk = perk.find((item) => item.id === selectedPerkId);
+
+  if (!selectedPerk) {
+    res.status(400).json({ error: "Không tìm thấy perk tương ứng." });
+    return;
+  }
+
   const amount = selectedPerk.price;
 
   try {
@@ -122,26 +128,26 @@ router.post("/create-payment", async (req, res) => {
   }
 });
 
-// Route để lấy thông tin chi tiết đơn hàng dựa trên Order ID
-router.get("/order/:orderId", async (req, res) => {
-  const { orderId } = req.params;
+// // Route để lấy thông tin chi tiết đơn hàng dựa trên Order ID
+// router.get("/order/:orderId", async (req, res) => {
+//   const { orderId } = req.params;
 
-  try {
-    // Gọi hàm xử lý để lấy thông tin chi tiết đơn hàng dựa trên Order ID
-    const orderDetails = await getOrderDetails(orderId);
+//   try {
+//     // Gọi hàm xử lý để lấy thông tin chi tiết đơn hàng dựa trên Order ID
+//     const orderDetails = await getOrderDetails(orderId);
 
-    // Trả về thông tin chi tiết đơn hàng cho client
-    res.json(orderDetails);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+//     // Trả về thông tin chi tiết đơn hàng cho client
+//     res.json(orderDetails);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// });
 
-// Hàm xử lý lấy thông tin chi tiết đơn hàng dựa trên Order ID từ PayPal
-async function getOrderDetails(orderId) {
-  const request = new paypal.orders.OrdersGetRequest(orderId);
-  const response = await paypalClient.execute(request);
-  return response.result;
-}
+// // Hàm xử lý lấy thông tin chi tiết đơn hàng dựa trên Order ID từ PayPal
+// async function getOrderDetails(orderId) {
+//   const request = new paypal.orders.OrdersGetRequest(orderId);
+//   const response = await paypalClient.execute(request);
+//   return response.result;
+// }
 module.exports = router;
