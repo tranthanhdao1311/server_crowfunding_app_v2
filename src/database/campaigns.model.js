@@ -31,6 +31,7 @@ const Campaigns = new mongoose.Schema({
       type: Object,
     },
   ],
+  raisedAmount: { type: String },
 });
 
 // Tạo mô hình Project từ Schema đã định nghĩa

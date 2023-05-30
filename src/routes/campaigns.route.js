@@ -79,50 +79,50 @@ router.delete("/campaigns/:id", async (req, res) => {
 
 // Tạo client PayPal
 
-const environment = new paypal.core.SandboxEnvironment(
-  "AbsuQWHyF68P2xTioYiXREERj3yxrJzg-9hTUjurNg7ljdN1EB2vklR3T16q9sGAx1O8cLVn8H7GNDgB",
-  "EL-La7f57w2r1jYBOsigwXLsx-620Bb1g8bbZbFm7Y3Iw21MZdpptz-gN3rgJWhSkV2NqUf-dXc8ZpiJ"
-);
-const client = new paypal.core.PayPalHttpClient(environment);
+// const environment = new paypal.core.SandboxEnvironment(
+//   "AbsuQWHyF68P2xTioYiXREERj3yxrJzg-9hTUjurNg7ljdN1EB2vklR3T16q9sGAx1O8cLVn8H7GNDgB",
+//   "EL-La7f57w2r1jYBOsigwXLsx-620Bb1g8bbZbFm7Y3Iw21MZdpptz-gN3rgJWhSkV2NqUf-dXc8ZpiJ"
+// );
+// const client = new paypal.core.PayPalHttpClient(environment);
 
-// Route để tạo phiên thanh toán trên backend
-router.post("/create-payment", async (req, res) => {
-  // const { perk } = req.body;
-  const perks = req.body.perk;
+// // Route để tạo phiên thanh toán trên backend
+// router.post("/create-payment", async (req, res) => {
+//   // const { perk } = req.body;
+//   const perks = req.body.perk;
 
-  // Lấy giá tiền dựa trên id
-  const getPriceById = (id) => {
-    const item = data.find((item) => item.id === id);
-    return item ? item.price : null;
-  };
-  const price = getPriceById(id);
-  if (!price) {
-    return res.status(404).json({ error: "Invalid id" });
-  }
+//   // Lấy giá tiền dựa trên id
+//   const getPriceById = (id) => {
+//     const item = data.find((item) => item.id === id);
+//     return item ? item.price : null;
+//   };
+//   const price = getPriceById(id);
+//   if (!price) {
+//     return res.status(404).json({ error: "Invalid id" });
+//   }
 
-  try {
-    const request = new paypal.orders.OrdersCreateRequest();
-    request.prefer("return=representation");
-    request.requestBody({
-      intent: "sandbox",
-      purchase_units: [
-        {
-          amount: {
-            value: price,
-          },
-        },
-      ],
-    });
+//   try {
+//     const request = new paypal.orders.OrdersCreateRequest();
+//     request.prefer("return=representation");
+//     request.requestBody({
+//       intent: "sandbox",
+//       purchase_units: [
+//         {
+//           amount: {
+//             value: price,
+//           },
+//         },
+//       ],
+//     });
 
-    // const response = await client.execute(request);
-    // const orderID = response.result.id;
+//     // const response = await client.execute(request);
+//     // const orderID = response.result.id;
 
-    res.status(200).json({ amount: amount });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
-  }
-});
+//     res.status(200).json({ amount: amount });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server Error" });
+//   }
+// });
 
 // // Route để lấy thông tin chi tiết đơn hàng dựa trên Order ID
 // router.get("/order/:orderId", async (req, res) => {
