@@ -7,7 +7,6 @@ const Campaigns = new mongoose.Schema({
     imgCate: { type: String },
   },
   desc: { type: String },
-  raisedAmount: { type: String },
   goal: { type: String, required: true },
   amountPrefilled: { type: String },
   video: { type: String },

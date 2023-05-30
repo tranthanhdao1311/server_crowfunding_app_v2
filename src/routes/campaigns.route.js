@@ -77,6 +77,29 @@ router.delete("/campaigns/:id", async (req, res) => {
   }
 });
 
+router.put("/campaigns/:id/add-amount", async (req, res) => {
+  const { id } = req.params;
+  const { amount } = req.body;
+
+  try {
+    const campaign = await Campaigns.findOne({ id: id });
+
+    if (!campaign) {
+      return res.status(404).json({ error: "Campaign not found" });
+    }
+
+    // Cộng tổng tiền vào raisedAmount
+    campaign.raisedAmount += amount;
+
+    // Lưu thay đổi vào cơ sở dữ liệu
+    await campaign.save();
+
+    res.json(campaign);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 // Tạo client PayPal
 
 // const environment = new paypal.core.SandboxEnvironment(
