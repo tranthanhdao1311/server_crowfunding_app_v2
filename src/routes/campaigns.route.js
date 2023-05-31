@@ -126,9 +126,7 @@ router.post("/campaign/:id/click", async (req, res) => {
 
 router.get("/popular-posts", async (req, res) => {
   try {
-    const popularPosts = await Campaigns.find()
-      .sort({ clickCampaign: -1 })
-      .limit(10);
+    const popularPosts = await Campaigns.find().sort({ clickCampaign: -1 });
 
     res.json(popularPosts);
   } catch (error) {
