@@ -90,7 +90,6 @@ router.put("/campaigns/:id/add-amount", async (req, res) => {
 
     // Cộng tổng tiền vào raisedAmount
     campaign.raisedAmount += amount;
-    campaign.supporter += 1;
 
     // Lưu thay đổi vào cơ sở dữ liệu
     await campaign.save();
