@@ -2,7 +2,7 @@
   "version": 2,
   "name": "aaaa",
   "builds": [{ "src": "server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/server.js" }],
+  "routes": [{ "src": "/(.*)", "dest": "/" }],
   "env": {
     "NODE_ENV": "production",
     "FS": "write"
